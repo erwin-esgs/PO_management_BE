@@ -63,7 +63,6 @@ Route::group(['middleware' => ['auth:api'] ], function() { //['auth:api'] ['auth
 	Route::post('/inv/delete', [InvoiceController::class, 'remove']);
 
 	Route::post('/dashboard', [DashboardController::class, 'getData']);
-	Route::post('/dashboardPo', [DashboardController::class, 'getPo']);
 	
 	Route::get('/jwt', [UserController::class, 'jwt']);
 });
