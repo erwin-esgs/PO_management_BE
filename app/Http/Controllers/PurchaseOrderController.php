@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PurchaseOrder;
-use App\Models\Project;
-use App\Models\Pt;
-use App\Models\Vendor;
+use App\Models\Invoice;
+//use App\Models\Project;
+//use App\Models\Vendor;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PurchaseOrderController extends Controller
@@ -32,7 +32,18 @@ class PurchaseOrderController extends Controller
 				->leftJoin('master_project', 'master_project.id', '=', 'purchase_order.id_project')
 				->leftJoin('master_vendor', 'master_vendor.id', '=', 'purchase_order.id_vendor')
 				->where('users.id', '=', $decoded->id)
+				->orderBy('purchase_order.po_number', 'asc')
 				->get();
+			
+			foreach ($data as $key1 => $value1) {
+				$data[$key1]->total = $data[$key1]->value + $data[$key1]->vat;
+				$query = Invoice::select(
+					'invoice.*'
+				)
+				->where('invoice.id_po', $value1->id );
+				$data[$key1]->invoice = $query->get()->all();
+			}			
+			
             $token = auth()->fromUser(auth()->user());
 			return response()->json(["data" => $data , "token" => $token]);
         } catch (Exception $e) {
@@ -84,7 +95,7 @@ class PurchaseOrderController extends Controller
                 $data->id_vendor = $request->input("id_vendor");
                 $data->status = 0;
                 if( $request->input("value") )$data->value = $request->input("value");
-                //if( $request->input("vat") )$data->vat = $request->input("vat");
+                if( $request->input("vat") )$data->vat = $request->input("vat");
                 if( $request->input("top") )$data->top = $request->input("top");
 				if( $request->input("tod") ){
 					$date = $request->input("tod");
@@ -116,7 +127,7 @@ class PurchaseOrderController extends Controller
                 if( $request->input("id_project") )$data->id_project = $request->input("id_project");
                 if( $request->input("id_vendor") )$data->id_vendor = $request->input("id_vendor");
                 if( $request->input("value") )$data->value = $request->input("value");
-                //if( $request->input("vat") )$data->vat = $request->input("vat");
+                if( $request->input("vat") )$data->vat = $request->input("vat");
 				if( $request->input("top") )$data->top = $request->input("top");
                 if( $request->input("tod") ){
 					$date = $request->input("tod");

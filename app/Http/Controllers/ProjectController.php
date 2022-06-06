@@ -10,7 +10,9 @@ class ProjectController extends Controller
 {
     public function show(Request $request){
         try {
-			$data = Project::select('master_project.*' , 'users.name as created_by')->leftJoin('users', 'users.id', '=', 'master_project.created_by')->get();
+			$data = Project::select('master_project.*' , 'users.name as created_by')->leftJoin('users', 'users.id', '=', 'master_project.created_by')
+				->orderBy('master_project.project_code', 'asc')
+				->get();
             $token = auth()->fromUser(auth()->user());
 			return response()->json(["data" => $data , "token" => $token]);
         } catch (Exception $e) {

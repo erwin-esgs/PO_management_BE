@@ -10,7 +10,9 @@ class VendorController extends Controller
 {
     public function show(Request $request){
         try {
-			$data = Vendor::select('master_vendor.*' , 'users.name as created_by')->leftJoin('users', 'users.id', '=', 'master_vendor.created_by')->get();
+			$data = Vendor::select('master_vendor.*' , 'users.name as created_by')->leftJoin('users', 'users.id', '=', 'master_vendor.created_by')
+				->orderBy('master_vendor.vendor_name', 'asc')
+				->get();
             $token = auth()->fromUser(auth()->user());
 			return response()->json(["data" => $data , "token" => $token]);
         } catch (Exception $e) {
@@ -41,7 +43,7 @@ class VendorController extends Controller
                 if( $request->input("email") )$data->email = $request->input("email");
                 if( $request->input("phone") )$data->phone = $request->input("phone");
                 if( $request->input("contact") )$data->contact = $request->input("contact");
-                if( $request->input("manager") )$data->manager = $request->input("manager");
+                //if( $request->input("manager") )$data->manager = $request->input("manager");
                 if( $request->input("bank_acc") )$data->bank_acc = $request->input("bank_acc");
                 if( $request->input("description") )$data->description = $request->input("description");
                 $data->created_by = $token->id;
@@ -65,7 +67,7 @@ class VendorController extends Controller
                 if( $request->input("email") )$data->email = $request->input("email");
                 if( $request->input("phone") )$data->phone = $request->input("phone");
                 if( $request->input("contact") )$data->contact = $request->input("contact");
-                if( $request->input("manager") )$data->manager = $request->input("manager");
+                //if( $request->input("manager") )$data->manager = $request->input("manager");
                 if( $request->input("bank_acc") )$data->bank_acc = $request->input("bank_acc");
                 if( $request->input("description") )$data->description = $request->input("description");
                 if($data->save()){

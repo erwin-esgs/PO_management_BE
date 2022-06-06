@@ -20,13 +20,19 @@ class InvoiceController extends Controller
             //$data = PurchaseOrder::all();
             $data = Invoice::select(
 					'purchase_order.*',
+					'master_project.project_code',
 					'invoice.*',
 					'users.name as created_by'
 				)
 				->leftJoin('users', 'users.id', '=', 'invoice.created_by')
 				->leftJoin('purchase_order', 'purchase_order.id', '=', 'invoice.id_po')
+				->leftJoin('master_project', 'master_project.id', '=', 'purchase_order.id_project')
 				->where('users.id', '=', $decoded->id)
 				->get();
+			foreach ($data as $key1 => $value1) {
+				$data[$key1]->total = $data[$key1]->value + $data[$key1]->vat;
+			}
+			
             $token = auth()->fromUser(auth()->user());
 			return response()->json(["data" => $data , "token" => $token]);
         } catch (Exception $e) {
