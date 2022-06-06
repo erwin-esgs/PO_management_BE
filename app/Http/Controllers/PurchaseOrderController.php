@@ -111,7 +111,7 @@ class PurchaseOrderController extends Controller
         try {
             $data = PurchaseOrder::find($id);
             if($data){
-                if( $request->input("po_number") )$data->id_po = $request->input("po_number");
+                if( $request->input("po_number") )$data->po_number = $request->input("po_number");
                 if( $request->input("id_pt") )$data->id_pt = $request->input("id_pt");
                 if( $request->input("id_project") )$data->id_project = $request->input("id_project");
                 if( $request->input("id_vendor") )$data->id_vendor = $request->input("id_vendor");
