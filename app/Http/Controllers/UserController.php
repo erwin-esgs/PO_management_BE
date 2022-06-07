@@ -41,13 +41,15 @@ class UserController extends Controller
 
     public function add(Request $request){
         try {
+			$token = JWTAuth::parseToken()->authenticate();
             $validatedData = $request->validate([
 				'name' => ['required'],
 				'email' => ['required'],
 				'password' => ['required'],
 				'role' => ['required'],
 			]);
-            if($validatedData){
+            if($validatedData && $token->role == 0){
+				
                 $data = new User();
                 $data->name = $request->input("name");
                 $data->email = $request->input("email");
@@ -67,12 +69,14 @@ class UserController extends Controller
 
     public function edit(Request $request , $id){
         try {
+			$token = JWTAuth::parseToken()->authenticate();
             $data = User::find($id);
-            if($data){
+            if($data && $token->role == 0){
                 if($request->input("name"))$data->name = $request->input("name");
                 if($request->input("role"))$data->role = $request->input("role");
                 if($request->input("email"))$data->email = $request->input("email");
-                if($data->save()){
+                if($request->input("password"))$data->password = Hash::make( $request->input("password") );
+				if($data->save()){
                     $token = auth()->fromUser(auth()->user());
 					return response()->json(["data" => $data , "token" => $token]);
                 }
