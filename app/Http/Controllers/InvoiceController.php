@@ -28,6 +28,7 @@ class InvoiceController extends Controller
 				->leftJoin('purchase_order', 'purchase_order.id', '=', 'invoice.id_po')
 				->leftJoin('master_project', 'master_project.id', '=', 'purchase_order.id_project')
 				->where('users.id', '=', $decoded->id)
+				->orderBy('invoice.due_date', 'desc')
 				->get();
 			foreach ($data as $key1 => $value1) {
 				$data[$key1]->total = $data[$key1]->value + $data[$key1]->vat;

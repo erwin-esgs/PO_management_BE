@@ -32,7 +32,7 @@ class PurchaseOrderController extends Controller
 				->leftJoin('master_project', 'master_project.id', '=', 'purchase_order.id_project')
 				->leftJoin('master_vendor', 'master_vendor.id', '=', 'purchase_order.id_vendor')
 				->where('users.id', '=', $decoded->id)
-				->orderBy('purchase_order.po_number', 'asc')
+				->orderBy('purchase_order.po_number', 'desc')
 				->get();
 			
 			foreach ($data as $key1 => $value1) {
