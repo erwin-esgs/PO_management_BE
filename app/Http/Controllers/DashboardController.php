@@ -33,6 +33,8 @@ class DashboardController extends Controller
 				if($request->input("startDate") && $request->input("endDate")){
 					$query->where('purchase_order.tod', '>=' , $request->input("startDate") );
 					$query->where('purchase_order.tod', '<=' , $request->input("endDate") );
+				}else{
+					$query->where('purchase_order.tod', '>=' , date('Y-01-01') );
 				}
 				if($request->input("id_pt"))$query->where('master_pt.id', (int)$request->input("id_pt") );
 				if($request->input("id_project"))$query->where('master_project.id', (int)$request->input("id_project") );

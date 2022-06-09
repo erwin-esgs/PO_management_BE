@@ -17,7 +17,8 @@ class PurchaseOrderController extends Controller
 			$decoded = json_decode(base64_decode(explode(".", $token)[1]));
 			
             //$data = PurchaseOrder::all();
-            $data = PurchaseOrder::select(
+            
+			$query = PurchaseOrder::select(
 					'master_pt.id as id_pt',
 					'master_pt.pt_name',
 					'master_project.id as id_project',
@@ -31,9 +32,10 @@ class PurchaseOrderController extends Controller
 				->leftJoin('master_pt', 'master_pt.id', '=', 'purchase_order.id_pt')
 				->leftJoin('master_project', 'master_project.id', '=', 'purchase_order.id_project')
 				->leftJoin('master_vendor', 'master_vendor.id', '=', 'purchase_order.id_vendor')
-				->where('users.id', '=', $decoded->id)
-				->orderBy('purchase_order.po_number', 'desc')
-				->get();
+				//->where('users.id', '=', $decoded->id)
+				->orderBy('purchase_order.po_number', 'desc');
+			if($decoded->role != 0) $query->where('users.id', '=', $decoded->id);
+			$data = $query->get()->all();
 			
 			foreach ($data as $key1 => $value1) {
 				$data[$key1]->total = $data[$key1]->value + $data[$key1]->vat;

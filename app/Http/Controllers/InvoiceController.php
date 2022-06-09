@@ -18,7 +18,7 @@ class InvoiceController extends Controller
 			$decoded = json_decode(base64_decode(explode(".", $token)[1]));
 			
             //$data = PurchaseOrder::all();
-            $data = Invoice::select(
+            $query = Invoice::select(
 					'purchase_order.*',
 					'master_project.project_code',
 					'invoice.*',
@@ -27,9 +27,10 @@ class InvoiceController extends Controller
 				->leftJoin('users', 'users.id', '=', 'invoice.created_by')
 				->leftJoin('purchase_order', 'purchase_order.id', '=', 'invoice.id_po')
 				->leftJoin('master_project', 'master_project.id', '=', 'purchase_order.id_project')
-				->where('users.id', '=', $decoded->id)
-				->orderBy('invoice.due_date', 'desc')
-				->get();
+				//->where('users.id', '=', $decoded->id)
+				->orderBy('invoice.due_date', 'desc');
+			if($decoded->role != 0) $query->where('users.id', '=', $decoded->id);
+			$data = $query->get()->all();
 			foreach ($data as $key1 => $value1) {
 				$data[$key1]->total = $data[$key1]->value + $data[$key1]->vat;
 			}
