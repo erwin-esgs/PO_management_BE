@@ -21,7 +21,7 @@ return new class extends Migration
 			$table->integer("id_project");
 			$table->date('due_date');
 			$table->bigInteger("value");
-			$table->bigInteger("vat");
+			$table->bigInteger("vat")->default(0);
 			$table->longText("description")->nullable();
 			$table->json("payment")->default("[]");
 			$table->tinyInteger('status');

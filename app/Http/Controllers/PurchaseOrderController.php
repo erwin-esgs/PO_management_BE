@@ -34,7 +34,7 @@ class PurchaseOrderController extends Controller
 				->leftJoin('master_vendor', 'master_vendor.id', '=', 'purchase_order.id_vendor')
 				//->where('users.id', '=', $decoded->id)
 				->orderBy('purchase_order.po_number', 'desc');
-			if($decoded->role != 0) $query->where('users.id', '=', $decoded->id);
+			//if($decoded->role != 0) $query->where('users.id', '=', $decoded->id);
 			$data = $query->get()->all();
 			
 			foreach ($data as $key1 => $value1) {

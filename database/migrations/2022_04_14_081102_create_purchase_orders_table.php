@@ -21,7 +21,7 @@ return new class extends Migration
 			$table->integer("id_project");
 			$table->integer("id_vendor");
 			$table->bigInteger("value");
-			$table->bigInteger("vat")->nullable();
+			$table->bigInteger("vat")->default(0);
 			$table->string("top")->nullable();
             $table->date('tod')->nullable();
             $table->longText("description")->nullable();
